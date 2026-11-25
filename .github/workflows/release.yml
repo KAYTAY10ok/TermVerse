@@ -2,6 +2,11 @@ name: Release
 on:
   push:
     tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 0.1.0). A tag v<version> is created on main."
+        required: true
 permissions:
   contents: write
 jobs:
@@ -11,15 +16,36 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref }}
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+      - name: Resolve version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then v="${INPUT_VERSION#v}"; else v="${GITHUB_REF_NAME#v}"; fi
+          if ! printf '%s' "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; then
+            echo "invalid version: $v" >&2
+            exit 1
+          fi
+          echo "VERSION=$v" >> "$GITHUB_ENV"
       - name: Test
         run: go test ./...
+      - name: Create tag (manual run)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+            echo "tag v$VERSION already exists" >&2
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "TermVerse v$VERSION"
+          git push origin "v$VERSION"
       - name: Release notes from CHANGELOG.md
         run: |
-          version="${GITHUB_REF_NAME#v}"
-          awk -v v="$version" '
+          awk -v v="$VERSION" '
             /^## \[/ { if (found) exit; if (index($0, "[" v "]")) { found=1; next } }
             found { print }
           ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
@@ -31,7 +57,7 @@ jobs:
             echo "curl -fsSL https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/scripts/install.sh | bash"
             echo '```'
             echo
-            echo "Debian/Ubuntu: download \`termverse_${version}_amd64.deb\` (or \`arm64\`) below, then \`sudo apt install ./termverse_${version}_amd64.deb\`."
+            echo "Debian/Ubuntu: download \`termverse_${VERSION}_amd64.deb\` (or \`arm64\`) below, then \`sudo apt install ./termverse_${VERSION}_amd64.deb\`."
           } >> "$RUNNER_TEMP/notes.md"
           cat "$RUNNER_TEMP/notes.md"
       - uses: goreleaser/goreleaser-action@v6
