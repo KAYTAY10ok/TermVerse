@@ -1,0 +1,18 @@
+{
+  "name": "cyberpunk",
+  "description": "Neon violet and electric cyan",
+  "author": "TermVerse",
+  "colors": {
+    "primary": "#BD00FF",
+    "secondary": "#00F0FF",
+    "accent": "#FF2A6D",
+    "text": "#E6E6FA",
+    "muted": "#7A6E9C",
+    "border": "#8A2BE2",
+    "highlight": "#3B0A57",
+    "highlight_text": "#00F0FF",
+    "success": "#05FFA1",
+    "warning": "#FFD300",
+    "error": "#FF2A6D"
+  }
+}

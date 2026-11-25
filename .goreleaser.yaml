@@ -1,0 +1,35 @@
+version: 2
+project_name: termverse
+builds:
+  - main: ./cmd/termverse
+    binary: termverse
+    env: [CGO_ENABLED=0]
+    goos: [linux]
+    goarch: [amd64, arm64]
+    flags: [-trimpath]
+    ldflags:
+      - -s -w
+      - -X github.com/KAYTAY10ok/TermVerse/internal/version.Version={{.Version}}
+      - -X github.com/KAYTAY10ok/TermVerse/internal/version.Commit={{.ShortCommit}}
+      - -X github.com/KAYTAY10ok/TermVerse/internal/version.Date={{.Date}}
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files: [LICENSE, README.md, CHANGELOG.md]
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+nfpms:
+  - package_name: termverse
+    file_name_template: "{{ .PackageName }}_{{ .Version }}_{{ .Arch }}"
+    homepage: https://github.com/KAYTAY10ok/TermVerse
+    maintainer: TermVerse contributors
+    description: Modern, customizable terminal environment (TUI).
+    license: MIT
+    section: utils
+    formats: [deb]
+    contents:
+      - src: LICENSE
+        dst: /usr/share/doc/termverse/copyright
+changelog:
+  sort: asc

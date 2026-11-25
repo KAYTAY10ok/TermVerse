@@ -1,0 +1,18 @@
+{
+  "name": "nord",
+  "description": "Arctic, north-bluish calm",
+  "author": "TermVerse",
+  "colors": {
+    "primary": "#88C0D0",
+    "secondary": "#81A1C1",
+    "accent": "#B48EAD",
+    "text": "#ECEFF4",
+    "muted": "#616E88",
+    "border": "#5E81AC",
+    "highlight": "#3B4252",
+    "highlight_text": "#8FBCBB",
+    "success": "#A3BE8C",
+    "warning": "#EBCB8B",
+    "error": "#BF616A"
+  }
+}
