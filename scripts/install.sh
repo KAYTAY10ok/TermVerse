@@ -68,6 +68,6 @@ info "Installed $BIN_DIR/termverse"
 
 case ":$PATH:" in
   *":$BIN_DIR:"*) ;;
-  *) printf '\nAdd it to your PATH:\n  echo '\''export PATH="%s:$PATH"'\'' >> ~/.bashrc\n' "$BIN_DIR" ;;
+  *) printf "\nAdd it to your PATH:\n  echo 'export PATH=\"%s:\$PATH\"' >> ~/.bashrc\n" "$BIN_DIR" ;;
 esac
 printf '\nRun \033[1mtermverse\033[0m to start.\n'
