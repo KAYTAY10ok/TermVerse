@@ -264,7 +264,9 @@ func listDisks(ctx context.Context) []Disk {
 	seen := map[string]bool{}
 	var out []Disk
 	for _, p := range parts {
-		if seen[p.Mountpoint] || strings.HasPrefix(p.Mountpoint, "/snap/") {
+		// Read-only image mounts (snaps, squashfs bundles) are always 100% full
+		// and only add noise, like `df -x squashfs`.
+		if seen[p.Mountpoint] || strings.HasPrefix(p.Mountpoint, "/snap/") || p.Fstype == "squashfs" {
 			continue
 		}
 		u, err := disk.UsageWithContext(ctx, p.Mountpoint)

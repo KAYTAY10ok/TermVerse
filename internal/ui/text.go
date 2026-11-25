@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"os"
 	"strings"
 	"unicode"
 
@@ -46,4 +47,19 @@ func Wrap(s string, width int) string {
 		return s
 	}
 	return ansi.Hardwrap(ansi.Wordwrap(s, width, " "), width, true)
+}
+
+// Tildify replaces the home directory prefix of a path with "~" for display.
+func Tildify(path string) string {
+	home, err := os.UserHomeDir()
+	if err != nil || home == "" || home == "/" {
+		return path
+	}
+	if path == home {
+		return "~"
+	}
+	if strings.HasPrefix(path, home+string(os.PathSeparator)) {
+		return "~" + path[len(home):]
+	}
+	return path
 }

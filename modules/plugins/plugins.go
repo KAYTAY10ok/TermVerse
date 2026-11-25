@@ -160,7 +160,7 @@ func (s *Screen) View(w, h int) string {
 	iw, ih := st.PanelInner(leftW, h)
 	body := st.Tabs(tabs, s.tab) + "\n" + st.Sep(iw) + "\n"
 	if s.tab == 2 && len(s.local) == 0 {
-		body += st.Muted.Render(ui.Wrap(ui.Tf("No local plugins found in %s", s.ctx.Paths.PluginsDir), iw))
+		body += st.Muted.Render(ui.Wrap(ui.Tf("No local plugins found in %s", ui.Tildify(s.ctx.Paths.PluginsDir)), iw))
 		if s.locErr != nil {
 			body += "\n" + st.Error.Render(s.locErr.Error())
 		}
@@ -200,7 +200,7 @@ func (s *Screen) details(width int) string {
 		b.WriteString(st.Title.Render(ui.Sanitize(m.Name)) + "\n\n")
 		b.WriteString(st.KV([][2]string{
 			{ui.T("Version"), ui.Sanitize(m.Version)}, {ui.T("Author"), ui.Sanitize(m.Author)},
-			{ui.T("Homepage"), ui.Sanitize(m.Homepage)}, {ui.T("Folder"), m.Dir},
+			{ui.T("Homepage"), ui.Sanitize(m.Homepage)}, {ui.T("Folder"), ui.Tildify(m.Dir)},
 		}, 10) + "\n\n")
 		if m.Error != "" {
 			b.WriteString(st.Error.Render(m.Error) + "\n\n")
@@ -214,5 +214,5 @@ func (s *Screen) details(width int) string {
 
 func (s *Screen) about(width int) string {
 	st := s.ctx.S
-	return st.Muted.Render(ui.Wrap(ui.Tf("Local plugins live in %s/<name>/plugin.json (fields: name, version, description, author, homepage).", s.ctx.Paths.PluginsDir), width))
+	return st.Muted.Render(ui.Wrap(ui.Tf("Local plugins live in %s/<name>/plugin.json (fields: name, version, description, author, homepage).", ui.Tildify(s.ctx.Paths.PluginsDir)), width))
 }

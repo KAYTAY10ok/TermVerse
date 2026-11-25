@@ -130,9 +130,9 @@ func (s *Screen) about(width int) string {
 		{ui.T("Built"), version.Date},
 		{ui.T("Go"), runtime.Version()},
 		{ui.T("Platform"), runtime.GOOS + "/" + runtime.GOARCH},
-		{ui.T("Config"), s.ctx.Paths.ConfigFile},
-		{ui.T("Themes"), s.ctx.Paths.ThemesDir},
-		{ui.T("Data"), s.ctx.Paths.DataDir},
+		{ui.T("Config"), ui.Tildify(s.ctx.Paths.ConfigFile)},
+		{ui.T("Themes"), ui.Tildify(s.ctx.Paths.ThemesDir)},
+		{ui.T("Data"), ui.Tildify(s.ctx.Paths.DataDir)},
 		{ui.T("GitHub"), version.RepoURL()},
 		{ui.T("License"), version.License},
 	}

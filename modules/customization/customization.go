@@ -251,7 +251,7 @@ func (s *Screen) preview(width int) string {
 	b.WriteString(st.Title.Render(t.Name) + " " + st.Muted.Render(ui.Truncate(ui.T(t.Description), width-len(t.Name)-1)) + "\n")
 	src := ui.T("built-in")
 	if t.Source != "builtin" {
-		src = t.Source
+		src = ui.Tildify(t.Source)
 	}
 	b.WriteString(st.Muted.Render(ui.T("Source: ")+ui.Truncate(src, width-8)) + "\n\n")
 	c := t.Colors

@@ -213,7 +213,7 @@ func tvInfo(ctx *ui.Context, now time.Time) string {
 	rows := [][2]string{
 		{ui.T("Version"), "v" + version.Version},
 		{ui.T("Theme"), ctx.Theme.Name},
-		{ui.T("Config"), ctx.Paths.ConfigFile},
+		{ui.T("Config"), ui.Tildify(ctx.Paths.ConfigFile)},
 		{ui.T("Modules"), fmt.Sprintf("%d", ctx.ModuleCount)},
 		{ui.T("Update check"), last},
 	}

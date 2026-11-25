@@ -223,7 +223,7 @@ func (s *Screen) View(w, h int) string {
 		leftW = w * 55 / 100
 	}
 	iw, ih := st.PanelInner(leftW, h)
-	head := st.Accent.Render(ui.Truncate(s.dir, iw)) + "\n"
+	head := st.Accent.Render(ui.Truncate(ui.Tildify(s.dir), iw)) + "\n"
 	info := ui.Tf("%d entries · sort: %s · hidden: %s · read-only", len(s.entries), ui.T(s.sortBy), ui.OnOff(s.hidden))
 	if s.filter != "" {
 		info += " · " + ui.T("filter: ") + s.filter

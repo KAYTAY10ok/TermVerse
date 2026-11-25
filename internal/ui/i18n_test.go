@@ -62,3 +62,13 @@ func init() {
 		untranslated[s] = true
 	}
 }
+
+func TestTildify(t *testing.T) {
+	t.Setenv("HOME", "/home/neo")
+	cases := map[string]string{"/home/neo": "~", "/home/neo/.config/x": "~/.config/x", "/home/neon/x": "/home/neon/x", "/etc": "/etc"}
+	for in, want := range cases {
+		if got := Tildify(in); got != want {
+			t.Errorf("Tildify(%q)=%q want %q", in, got, want)
+		}
+	}
+}
