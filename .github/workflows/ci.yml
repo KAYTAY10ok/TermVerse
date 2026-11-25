@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: gofmt
+        run: test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+      - name: go vet
+        run: go vet ./...
+      - name: test
+        run: go test -race ./...
+      - name: build linux/amd64 + arm64
+        run: |
+          CGO_ENABLED=0 GOARCH=amd64 go build -o /tmp/termverse-amd64 ./cmd/termverse
+          CGO_ENABLED=0 GOARCH=arm64 go build -o /tmp/termverse-arm64 ./cmd/termverse
+      - name: smoke test
+        run: /tmp/termverse-amd64 --version && /tmp/termverse-amd64 system
+      - name: shellcheck
+        run: shellcheck scripts/install.sh packaging/deb/build-deb.sh
+      - name: debian package
+        run: make deb && dpkg-deb -I termverse_*.deb

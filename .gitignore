@@ -1,0 +1,7 @@
+/termverse
+/dist/
+*.deb
+*.test
+*.out
+__pycache__/
+.DS_Store
